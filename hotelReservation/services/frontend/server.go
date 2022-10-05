@@ -195,7 +195,9 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 	for _, hid := range searchResp.HotelIds {
 		log.Info().Msgf("Search Handler hotelId = %s", hid)
 	}
-
+	if(len(searchResp.HotelIds) == 0){
+		log.Warn().Msg("List of hotels is empty!")
+	}
 	// grab locale from query params or default to en
 	locale := r.URL.Query().Get("locale")
 	if locale == "" {

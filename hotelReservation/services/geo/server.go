@@ -122,8 +122,8 @@ func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error
 
 	if(float64(req.Lat) > 90.0 || float64(req.Lat) < -90.0 ||
 	   float64(req.Lon) > 180.0 || float64(req.Lon) < -180.0){
-		log.Panic().Msg("Wrong lat/lon format!")
-		panic("Wrong lat/lon format!")
+		log.Warn().Msg("Wrong lat/lon format!")
+		//panic("Wrong lat/lon format!")
 	}
 
 	var (
