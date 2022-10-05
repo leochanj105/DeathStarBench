@@ -120,6 +120,12 @@ func (s *Server) Shutdown() {
 func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error) {
 	log.Trace().Msgf("In geo Nearby")
 
+	if(float64(req.Lat) > 90.0 || float64(req.Lat) < -90.0 ||
+	   float64(req.Lon) > 180.0 || float64(req.Lon) < -180.0){
+		log.Panic().Msg("Wrong lat/lon format!")
+		panic("Wrong lat/lon format!")
+	}
+
 	var (
 		points = s.getNearbyPoints(ctx, float64(req.Lat), float64(req.Lon))
 		res    = &pb.Result{}
