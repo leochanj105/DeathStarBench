@@ -181,6 +181,8 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Info().Msgf(" SEARCH [lat: %v, lon: %v, inDate: %v, outDate: %v", lat, lon, inDate, outDate)
 	// search for best hotels
 	searchResp, err := s.searchClient.Nearby(ctx, &search.NearbyRequest{
+		   //  lat,
+		   //  lon,
 		     lon,
 		     lat,
 		     inDate,
