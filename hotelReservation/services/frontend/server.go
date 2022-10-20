@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
+	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	recommendation "github.com/harlow/go-micro-services/services/recommendation/proto"
 	reservation "github.com/harlow/go-micro-services/services/reservation/proto"
@@ -31,6 +35,7 @@ type Server struct {
 	Port                 int
 	Tracer               opentracing.Tracer
 	Registry             *registry.Client
+	SearchTimeout	     time.Duration
 }
 
 // Run the server
@@ -179,16 +184,27 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Trace().Msg("starts searchHandler querying downstream")
 
 	log.Info().Msgf(" SEARCH [lat: %v, lon: %v, inDate: %v, outDate: %v", lat, lon, inDate, outDate)
+
+	ctx_search, cancel_search := context.WithTimeout(ctx, s.SearchTimeout)
+	defer cancel_search()
+
+	log.Info().Msgf("current timeout for Nearby is %s", s.SearchTimeout.String())
+
 	// search for best hotels
-	searchResp, err := s.searchClient.Nearby(ctx, &search.NearbyRequest{
-		   //  lat,
-		   //  lon,
-		     lon,
+	searchResp, err := s.searchClient.Nearby(ctx_search, &search.NearbyRequest{
 		     lat,
+		     lon,
+		   //  lon,
+		   //  lat,
 		     inDate,
 		     outDate,
 	})
 	if err != nil {
+		if e, ok := status.FromError(err); ok{
+			if e.Code() == codes.DeadlineExceeded{
+				log.Warn().Msgf("current timeout for Nearby is %s", s.SearchTimeout.String())
+			}
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

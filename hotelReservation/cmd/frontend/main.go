@@ -57,12 +57,16 @@ func main() {
 		log.Panic().Msgf("Got error while initializing consul agent: %v", err)
 	}
 	log.Info().Msg("Consul agent initialized")
+	log.Info().Msgf("From file %v, Search timeout is %v", "config.json", result["SearchTimeout"])
+
+	var s_timeout, _ = time.ParseDuration(result["SearchTimeout"])
 
 	srv := &frontend.Server{
 		Registry: registry,
 		Tracer:   tracer,
 		IpAddr:   serv_ip,
 		Port:     serv_port,
+		SearchTimeout: s_timeout,
 	}
 
 	log.Info().Msg("Starting server...")
