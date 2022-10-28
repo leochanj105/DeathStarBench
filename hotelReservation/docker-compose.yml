@@ -53,7 +53,7 @@ services:
       - LOG_LEVEL
       # - GRPC_GO_LOG_VERBOSITY_LEVEL=2
       # - GRPC_GO_LOG_SEVERITY_LEVEL=info
-    cpus: '0.1'
+    #cpus: '0.1'
 
   geo:
     environment:
@@ -68,7 +68,7 @@ services:
       - mongodb-geo
       - consul
     restart: always
-    cpus: '0.1'
+    #cpus: '0.1'
 
   rate:
     environment:

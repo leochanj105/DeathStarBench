@@ -27,10 +27,11 @@ func setLogLevel()  {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
         case "TRACE", "trace":
 		zerolog.SetGlobalLevel(zerolog.TraceLevel)
+	case "DISABLE", "disable":
+		zerolog.SetGlobalLevel(zerolog.Disabled)
 	default: // Set default log level to info
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
         }
-
 	log.Info().Msgf("Set global log level: %s", logLevel)
 }
 
