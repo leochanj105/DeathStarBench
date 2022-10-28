@@ -19,7 +19,7 @@ import (
 	pb "github.com/harlow/go-micro-services/services/geo/proto"
 	"github.com/harlow/go-micro-services/tls"
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
@@ -106,7 +106,7 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed register: %v", err)
 	}
-	log.Info().Msg("Successfully registered in consul")
+// 	log.Info().Msg("Successfully registered in consul")
 
 	return srv.Serve(lis)
 }
@@ -118,11 +118,11 @@ func (s *Server) Shutdown() {
 
 // Nearby returns all hotels within a given distance.
 func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error) {
-	log.Trace().Msgf("In geo Nearby")
+// // 	log.Trace().Msgf("In geo Nearby")
 
 	if(float64(req.Lat) > 90.0 || float64(req.Lat) < -90.0 ||
 	   float64(req.Lon) > 180.0 || float64(req.Lon) < -180.0){
-		log.Warn().Msg("Wrong lat/lon format!")
+// 		log.Warn().Msg("Wrong lat/lon format!")
 		//panic("Wrong lat/lon format!")
 	}
 
@@ -131,10 +131,10 @@ func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error
 		res    = &pb.Result{}
 	)
 
-	log.Trace().Msgf("geo after getNearbyPoints, len = %d", len(points))
+// // 	log.Trace().Msgf("geo after getNearbyPoints, len = %d", len(points))
 
 	for _, p := range points {
-		log.Trace().Msgf("In geo Nearby return hotelId = %s", p.Id())
+// // 		log.Trace().Msgf("In geo Nearby return hotelId = %s", p.Id())
 		res.HotelIds = append(res.HotelIds, p.Id())
 	}
 
@@ -142,7 +142,7 @@ func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error
 }
 
 func (s *Server) getNearbyPoints(ctx context.Context, lat, lon float64) []geoindex.Point {
-	log.Trace().Msgf("In geo getNearbyPoints, lat = %f, lon = %f", lat, lon)
+// // 	log.Trace().Msgf("In geo getNearbyPoints, lat = %f, lon = %f", lat, lon)
 
 	center := &geoindex.GeoPoint{
 		Pid:  "",
@@ -167,7 +167,7 @@ func newGeoIndex(session *mgo.Session) *geoindex.ClusteringIndex {
 	// }
 	// defer session.Close()
 
-	log.Trace().Msg("new geo newGeoIndex")
+// 	log.Trace().Msg("new geo newGeoIndex")
 
 	s := session.Copy()
 	defer s.Close()
@@ -176,7 +176,7 @@ func newGeoIndex(session *mgo.Session) *geoindex.ClusteringIndex {
 	var points []*point
 	err := c.Find(bson.M{}).All(&points)
 	if err != nil {
-		log.Error().Msgf("Failed get geo data: ", err)
+// // 		log.Error().Msgf("Failed get geo data: ", err)
 	}
 
 	// add points to index

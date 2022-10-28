@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go/config"
 )
@@ -23,7 +23,7 @@ func Init(serviceName, host string) (opentracing.Tracer, error) {
 			ratio = 1.0
 		}
 	}
-	log.Info().Msgf("Jaeger client: adjusted sample ratio %f", ratio)
+// 	log.Info().Msgf("Jaeger client: adjusted sample ratio %f", ratio)
 	cfg := config.Configuration{
 		Sampler: &config.SamplerConfig{
 			Type:  "probabilistic",

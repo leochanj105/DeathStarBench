@@ -3,7 +3,7 @@ package main
 import (
 	"strconv"
 
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -27,16 +27,16 @@ type RatePlan struct {
 func initializeDatabase(url string) *mgo.Session {
 	session, err := mgo.Dial(url)
 	if err != nil {
-		log.Panic().Msg(err.Error())
+// 		log.Panic().Msg(err.Error())
 	}
 	// defer session.Close()
-	log.Info().Msg("New session successfull...")
+// 	log.Info().Msg("New session successfull...")
 
-	log.Info().Msg("Generating test data...")
+// 	log.Info().Msg("Generating test data...")
 	c := session.DB("rate-db").C("inventory")
 	count, err := c.Find(&bson.M{"hotelId": "1"}).Count()
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+// 		log.Fatal().Msg(err.Error())
 	}
 	if count == 0 {
 		err = c.Insert(&RatePlan{
@@ -51,13 +51,13 @@ func initializeDatabase(url string) *mgo.Session {
 				109.00,
 				123.17}})
 		if err != nil {
-			log.Fatal().Msg(err.Error())
+// 			log.Fatal().Msg(err.Error())
 		}
 	}
 
 	count, err = c.Find(&bson.M{"hotelId": "2"}).Count()
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+// 		log.Fatal().Msg(err.Error())
 	}
 	if count == 0 {
 		err = c.Insert(&RatePlan{
@@ -72,13 +72,13 @@ func initializeDatabase(url string) *mgo.Session {
 				139.00,
 				153.09}})
 		if err != nil {
-			log.Fatal().Msg(err.Error())
+// 			log.Fatal().Msg(err.Error())
 		}
 	}
 
 	count, err = c.Find(&bson.M{"hotelId": "3"}).Count()
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+// 		log.Fatal().Msg(err.Error())
 	}
 	if count == 0 {
 		err = c.Insert(&RatePlan{
@@ -93,7 +93,7 @@ func initializeDatabase(url string) *mgo.Session {
 				109.00,
 				123.17}})
 		if err != nil {
-			log.Fatal().Msg(err.Error())
+// 			log.Fatal().Msg(err.Error())
 		}
 	}
 
@@ -103,7 +103,7 @@ func initializeDatabase(url string) *mgo.Session {
 			hotel_id := strconv.Itoa(i)
 			count, err = c.Find(&bson.M{"hotelId": hotel_id}).Count()
 			if err != nil {
-				log.Fatal().Msg(err.Error())
+// 				log.Fatal().Msg(err.Error())
 			}
 			end_date := "2015-04-"
 			rate := 109.00
@@ -141,7 +141,7 @@ func initializeDatabase(url string) *mgo.Session {
 						rate,
 						rate_inc}})
 				if err != nil {
-					log.Fatal().Msg(err.Error())
+// 					log.Fatal().Msg(err.Error())
 				}
 			}
 		}
@@ -149,7 +149,7 @@ func initializeDatabase(url string) *mgo.Session {
 
 	err = c.EnsureIndexKey("hotelId")
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+// 		log.Fatal().Msg(err.Error())
 	}
 
 	return session

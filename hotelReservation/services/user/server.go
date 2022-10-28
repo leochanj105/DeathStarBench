@@ -20,7 +20,7 @@ import (
 	// "io/ioutil"
 	"net"
 
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 
 	// "os"
 	"time"
@@ -74,7 +74,7 @@ func (s *Server) Run() error {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.Port))
 	if err != nil {
-		log.Fatal().Msgf("failed to listen: %v", err)
+// // 		log.Fatal().Msgf("failed to listen: %v", err)
 	}
 
 	// // register the service
@@ -94,7 +94,7 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed register: %v", err)
 	}
-	log.Info().Msg("Successfully registered in consul")
+// 	log.Info().Msg("Successfully registered in consul")
 
 	return srv.Serve(lis)
 }
@@ -108,7 +108,7 @@ func (s *Server) Shutdown() {
 func (s *Server) CheckUser(ctx context.Context, req *pb.Request) (*pb.Result, error) {
 	res := new(pb.Result)
 
-	log.Trace().Msg("CheckUser")
+// 	log.Trace().Msg("CheckUser")
 
 	sum := sha256.Sum256([]byte(req.Password))
 	pass := fmt.Sprintf("%x", sum)
@@ -133,7 +133,7 @@ func (s *Server) CheckUser(ctx context.Context, req *pb.Request) (*pb.Result, er
 
 	// res.Correct = user.Password == pass
 
-	log.Trace().Msgf("CheckUser %d", res.Correct)
+// // 	log.Trace().Msgf("CheckUser %d", res.Correct)
 
 	return res, nil
 }
@@ -153,7 +153,7 @@ func loadUsers(session *mgo.Session) map[string]string {
 	var users []User
 	err := c.Find(bson.M{}).All(&users)
 	if err != nil {
-		log.Error().Msgf("Failed get users data: ", err)
+// // 		log.Error().Msgf("Failed get users data: ", err)
 	}
 
 	res := make(map[string]string)
@@ -161,7 +161,7 @@ func loadUsers(session *mgo.Session) map[string]string {
 		res[user.Username] = user.Password
 	}
 
-	log.Trace().Msg("Done load users")
+// 	log.Trace().Msg("Done load users")
 
 	return res
 }

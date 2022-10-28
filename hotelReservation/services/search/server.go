@@ -6,7 +6,7 @@ import (
 	// F"io/ioutil"
 	"net"
 
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 
 	// "os"
 	"time"
@@ -76,7 +76,7 @@ func (s *Server) Run() error {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.Port))
 	if err != nil {
-		log.Fatal().Msgf("failed to listen: %v", err)
+// // 		log.Fatal().Msgf("failed to listen: %v", err)
 	}
 
 	// register with consul
@@ -96,7 +96,7 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed register: %v", err)
 	}
-	log.Info().Msg("Successfully registered in consul")
+// 	log.Info().Msg("Successfully registered in consul")
 
 	return srv.Serve(lis)
 }
@@ -135,10 +135,10 @@ func (s *Server) initRateClient(name string) error {
 // Nearby returns ids of nearby hotels ordered by ranking algo
 func (s *Server) Nearby(ctx context.Context, req *pb.NearbyRequest) (*pb.SearchResult, error) {
 	// find nearby hotels
-	log.Trace().Msg("in Search Nearby")
+// 	log.Trace().Msg("in Search Nearby")
 
-	log.Trace().Msgf("nearby lat = %f", req.Lat)
-	log.Trace().Msgf("nearby lon = %f", req.Lon)
+// // 	log.Trace().Msgf("nearby lat = %f", req.Lat)
+// // 	log.Trace().Msgf("nearby lon = %f", req.Lon)
 
 	nearby, err := s.geoClient.Nearby(ctx, &geo.Request{
 		Lat: req.Lat,
@@ -148,9 +148,9 @@ func (s *Server) Nearby(ctx context.Context, req *pb.NearbyRequest) (*pb.SearchR
 		return nil, err
 	}
 
-	for _, hid := range nearby.HotelIds {
-		log.Trace().Msgf("get Nearby hotelId = %s", hid)
-	}
+	//for _, hid := range nearby.HotelIds {
+// // 		log.Trace().Msgf("get Nearby hotelId = %s", hid)
+//	}
 
 	// find rates for hotels
 	rates, err := s.rateClient.GetRates(ctx, &rate.Request{
@@ -170,7 +170,7 @@ func (s *Server) Nearby(ctx context.Context, req *pb.NearbyRequest) (*pb.SearchR
 	// build the response
 	res := new(pb.SearchResult)
 	for _, ratePlan := range rates.RatePlans {
-		log.Trace().Msgf("get RatePlan HotelId = %s, Code = %s", ratePlan.HotelId, ratePlan.Code)
+// // 		log.Trace().Msgf("get RatePlan HotelId = %s, Code = %s", ratePlan.HotelId, ratePlan.Code)
 		res.HotelIds = append(res.HotelIds, ratePlan.HotelId)
 	}
 	return res, nil

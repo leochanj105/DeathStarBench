@@ -12,7 +12,7 @@ import (
 	// "os"
 	"time"
 
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
@@ -49,7 +49,7 @@ func (s *Server) Run() error {
 
 	s.uuid = uuid.New().String()
 
-	log.Trace().Msgf("in run s.IpAddr = %s, port = %d", s.IpAddr, s.Port)
+// // 	log.Trace().Msgf("in run s.IpAddr = %s, port = %d", s.IpAddr, s.Port)
 
 	opts := []grpc.ServerOption{
 		grpc.KeepaliveParams(keepalive.ServerParameters{
@@ -73,7 +73,7 @@ func (s *Server) Run() error {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.Port))
 	if err != nil {
-		log.Fatal().Msgf("failed to configure listener: %v", err)
+// // 		log.Fatal().Msgf("failed to configure listener: %v", err)
 	}
 
 	// register the service
@@ -93,7 +93,7 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed register: %v", err)
 	}
-	log.Info().Msg("Successfully registered in consul")
+// 	log.Info().Msg("Successfully registered in consul")
 
 	return srv.Serve(lis)
 }
@@ -111,7 +111,7 @@ func (s *Server) GetProfiles(ctx context.Context, req *pb.Request) (*pb.Result, 
 	// }
 	// defer session.Close()
 
-	log.Trace().Msgf("In GetProfiles")
+// // 	log.Trace().Msgf("In GetProfiles")
 
 	res := new(pb.Result)
 	hotels := make([]*pb.Hotel, 0)
@@ -123,8 +123,8 @@ func (s *Server) GetProfiles(ctx context.Context, req *pb.Request) (*pb.Result, 
 		item, err := s.MemcClient.Get(i)
 		if err == nil {
 			// memcached hit
-			profile_str := string(item.Value)
-			log.Trace().Msgf("memc hit with %v", profile_str)
+			//profile_str := string(item.Value)
+// // 			log.Trace().Msgf("memc hit with %v", profile_str)
 
 			hotel_prof := new(pb.Hotel)
 			json.Unmarshal(item.Value, hotel_prof)
@@ -140,7 +140,7 @@ func (s *Server) GetProfiles(ctx context.Context, req *pb.Request) (*pb.Result, 
 			err := c.Find(bson.M{"id": i}).One(&hotel_prof)
 
 			if err != nil {
-				log.Error().Msgf("Failed get hotels data: ", err)
+// // 				log.Error().Msgf("Failed get hotels data: ", err)
 			}
 
 			// for _, h := range hotels {
@@ -150,7 +150,7 @@ func (s *Server) GetProfiles(ctx context.Context, req *pb.Request) (*pb.Result, 
 
 			prof_json, err := json.Marshal(hotel_prof)
 			if err != nil {
-				log.Error().Msgf("Failed to marshal hotel [id: %v] with err:", hotel_prof.Id, err)
+// // 				log.Error().Msgf("Failed to marshal hotel [id: %v] with err:", hotel_prof.Id, err)
 			}
 			memc_str := string(prof_json)
 
@@ -158,11 +158,11 @@ func (s *Server) GetProfiles(ctx context.Context, req *pb.Request) (*pb.Result, 
 			s.MemcClient.Set(&memcache.Item{Key: i, Value: []byte(memc_str)})
 
 		} else {
-			log.Panic().Msgf("Tried to get hotelId [%v], but got memmcached error = %s", i, err)
+// // 			log.Panic().Msgf("Tried to get hotelId [%v], but got memmcached error = %s", i, err)
 		}
 	}
 
 	res.Hotels = hotels
-	log.Trace().Msgf("In GetProfiles after getting resp")
+// // 	log.Trace().Msgf("In GetProfiles after getting resp")
 	return res, nil
 }

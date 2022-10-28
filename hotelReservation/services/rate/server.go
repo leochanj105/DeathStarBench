@@ -13,7 +13,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/rs/zerolog/log"
+// 	"github.com/rs/zerolog/log"
 
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
@@ -73,7 +73,7 @@ func (s *Server) Run() error {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.Port))
 	if err != nil {
-		log.Fatal().Msgf("failed to listen: %v", err)
+// // 		log.Fatal().Msgf("failed to listen: %v", err)
 	}
 
 	// register the service
@@ -93,7 +93,7 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed register: %v", err)
 	}
-	log.Info().Msg("Successfully registered in consul")
+// 	log.Info().Msg("Successfully registered in consul")
 
 	return srv.Serve(lis)
 }
@@ -121,7 +121,7 @@ func (s *Server) GetRates(ctx context.Context, req *pb.Request) (*pb.Result, err
 			// memcached hit
 			rate_strs := strings.Split(string(item.Value), "\n")
 
-			log.Trace().Msgf("memc hit, hotelId = %s,rate strings: %v", hotelID, rate_strs)
+// // 			log.Trace().Msgf("memc hit, hotelId = %s,rate strings: %v", hotelID, rate_strs)
 
 			for _, rate_str := range rate_strs {
 				if len(rate_str) != 0 {
@@ -132,9 +132,9 @@ func (s *Server) GetRates(ctx context.Context, req *pb.Request) (*pb.Result, err
 			}
 		} else if err == memcache.ErrCacheMiss {
 
-			log.Trace().Msgf("memc miss, hotelId = %s", hotelID)
+// // 			log.Trace().Msgf("memc miss, hotelId = %s", hotelID)
 
-			log.Trace().Msg("memcached miss, set up mongo connection")
+// 			log.Trace().Msg("memcached miss, set up mongo connection")
 			// memcached miss, set up mongo connection
 			session := s.MongoSession.Copy()
 			defer session.Close()
@@ -145,13 +145,13 @@ func (s *Server) GetRates(ctx context.Context, req *pb.Request) (*pb.Result, err
 			tmpRatePlans := make(RatePlans, 0)
 			err := c.Find(&bson.M{"hotelId": hotelID}).All(&tmpRatePlans)
 			if err != nil {
-				log.Panic().Msgf("Tried to find hotelId [%v], but got error", hotelID, err.Error())
+// // 				log.Panic().Msgf("Tried to find hotelId [%v], but got error", hotelID, err.Error())
 			} else {
 				for _, r := range tmpRatePlans {
 					ratePlans = append(ratePlans, r)
 					rate_json, err := json.Marshal(r)
 					if err != nil {
-						log.Error().Msgf("Failed to marshal plan [Code: %v] with error: %s", r.Code, err)
+// // 						log.Error().Msgf("Failed to marshal plan [Code: %v] with error: %s", r.Code, err)
 					}
 					memc_str = memc_str + string(rate_json) + "\n"
 				}
@@ -161,7 +161,7 @@ func (s *Server) GetRates(ctx context.Context, req *pb.Request) (*pb.Result, err
 			s.MemcClient.Set(&memcache.Item{Key: hotelID, Value: []byte(memc_str)})
 
 		} else {
-			log.Panic().Msgf("Memmcached error while trying to get hotel [id: %v]= %s", hotelID, err)
+// // 			log.Panic().Msgf("Memmcached error while trying to get hotel [id: %v]= %s", hotelID, err)
 		}
 	}
 
