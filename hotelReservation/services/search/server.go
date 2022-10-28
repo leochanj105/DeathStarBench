@@ -6,7 +6,7 @@ import (
 	// F"io/ioutil"
 	"net"
 
-// 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 
 	// "os"
 	"time"
@@ -137,8 +137,8 @@ func (s *Server) Nearby(ctx context.Context, req *pb.NearbyRequest) (*pb.SearchR
 	// find nearby hotels
 // 	log.Trace().Msg("in Search Nearby")
 
-// // 	log.Trace().Msgf("nearby lat = %f", req.Lat)
-// // 	log.Trace().Msgf("nearby lon = %f", req.Lon)
+	log.Trace().Msgf("nearby lat = %f", req.Lat)
+	log.Trace().Msgf("nearby lon = %f", req.Lon)
 
 	nearby, err := s.geoClient.Nearby(ctx, &geo.Request{
 		Lat: req.Lat,

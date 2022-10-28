@@ -13,7 +13,7 @@ import (
 	recommendation "github.com/harlow/go-micro-services/services/recommendation/proto"
 	reservation "github.com/harlow/go-micro-services/services/reservation/proto"
 	user "github.com/harlow/go-micro-services/services/user/proto"
-// 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 
 	"github.com/harlow/go-micro-services/dialer"
 	"github.com/harlow/go-micro-services/registry"
@@ -183,7 +183,7 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 
 // 	log.Trace().Msg("starts searchHandler querying downstream")
 
-// // 	log.Info().Msgf(" SEARCH [lat: %v, lon: %v, inDate: %v, outDate: %v", lat, lon, inDate, outDate)
+	log.Info().Msgf(" SEARCH [lat: %v, lon: %v, inDate: %v, outDate: %v", lat, lon, inDate, outDate)
 
 	ctx_search, cancel_search := context.WithTimeout(ctx, s.SearchTimeout)
 	defer cancel_search()
@@ -214,7 +214,7 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 // // 		log.Info().Msgf("Search Handler hotelId = %s", hid)
 	//}
 	if(len(searchResp.HotelIds) == 0){
-// 		log.Warn().Msg("List of hotels is empty!")
+		log.Warn().Msg("List of hotels is empty!")
 	}
 	// grab locale from query params or default to en
 	locale := r.URL.Query().Get("locale")

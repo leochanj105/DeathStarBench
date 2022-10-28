@@ -19,7 +19,7 @@ import (
 	pb "github.com/harlow/go-micro-services/services/geo/proto"
 	"github.com/harlow/go-micro-services/tls"
 	opentracing "github.com/opentracing/opentracing-go"
-// 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
@@ -122,7 +122,7 @@ func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error
 
 	if(float64(req.Lat) > 90.0 || float64(req.Lat) < -90.0 ||
 	   float64(req.Lon) > 180.0 || float64(req.Lon) < -180.0){
-// 		log.Warn().Msg("Wrong lat/lon format!")
+		log.Warn().Msg("Wrong lat/lon format!")
 		//panic("Wrong lat/lon format!")
 	}
 
@@ -142,7 +142,7 @@ func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error
 }
 
 func (s *Server) getNearbyPoints(ctx context.Context, lat, lon float64) []geoindex.Point {
-// // 	log.Trace().Msgf("In geo getNearbyPoints, lat = %f, lon = %f", lat, lon)
+	log.Trace().Msgf("In geo getNearbyPoints, lat = %f, lon = %f", lat, lon)
 
 	center := &geoindex.GeoPoint{
 		Pid:  "",
