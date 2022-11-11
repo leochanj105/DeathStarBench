@@ -19,7 +19,7 @@ import (
 	pb "github.com/harlow/go-micro-services/services/geo/proto"
 	"github.com/harlow/go-micro-services/tls"
 	opentracing "github.com/opentracing/opentracing-go"
-// 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
@@ -130,12 +130,14 @@ func (s *Server) Nearby(ctx context.Context, req *pb.Request) (*pb.Result, error
 		points = s.getNearbyPoints(ctx, float64(req.Lat), float64(req.Lon))
 		res    = &pb.Result{}
 	)
+	log.Trace().Msgf("points = %v, ctx = %v, float64(req.Lat) = %v, float64(req.Lon) = %v", points, ctx, float64(req.Lat), float64(req.Lon))
 
 // // 	log.Trace().Msgf("geo after getNearbyPoints, len = %d", len(points))
 
 	for _, p := range points {
 // // 		log.Trace().Msgf("In geo Nearby return hotelId = %s", p.Id())
 		res.HotelIds = append(res.HotelIds, p.Id())
+		log.Trace().Msgf("res.HotelIds = %v, res.HotelIds = %v, p.Id() = %v", res.HotelIds, res.HotelIds, p.Id())
 	}
 
 	return res, nil
@@ -149,14 +151,18 @@ func (s *Server) getNearbyPoints(ctx context.Context, lat, lon float64) []geoind
 		Plat: lat,
 		Plon: lon,
 	}
+	log.Trace().Msgf("center = %v, Pid = %v, Plat: lat = %v, Plon: lon = %v", center, "", lat, lon)
 
-	return s.index.KNearest(
+	var ret = s.index.KNearest(
 		center,
 		maxSearchResults,
 		geoindex.Km(maxSearchRadius), func(p geoindex.Point) bool {
 			return true
 		},
 	)
+	log.Trace().Msgf("ret = %v, center = %v, maxSearchResults = %v, maxSearchRadius = %v", ret, center, maxSearchResults, maxSearchRadius)
+
+	return ret
 }
 
 // newGeoIndex returns a geo index with points loaded

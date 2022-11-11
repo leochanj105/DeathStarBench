@@ -13,7 +13,7 @@ import (
 	recommendation "github.com/harlow/go-micro-services/services/recommendation/proto"
 	reservation "github.com/harlow/go-micro-services/services/reservation/proto"
 	user "github.com/harlow/go-micro-services/services/user/proto"
-// 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 
 	"github.com/harlow/go-micro-services/dialer"
 	"github.com/harlow/go-micro-services/registry"
@@ -159,11 +159,14 @@ func (s *Server) initReservation(name string) error {
 func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx := r.Context()
+	log.Trace().Msgf("ctx = %v, r = %v", ctx, r)
 
 // 	log.Trace().Msg("starts searchHandler")
 
 	// in/out dates from query params
 	inDate, outDate := r.URL.Query().Get("inDate"), r.URL.Query().Get("outDate")
+	log.Trace().Msgf("inData = %v, outData = %v, r.URL.Query() = %v, Get()_par1 = %v, Get()_par2 = %v", inDate, outDate, r.URL.Query(), "indate", "outDate")
+
 	if inDate == "" || outDate == "" {
 		http.Error(w, "Please specify inDate/outDate params", http.StatusBadRequest)
 		return
@@ -171,15 +174,24 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 
 	// lan/lon from query params
 	sLat, sLon := r.URL.Query().Get("lat"), r.URL.Query().Get("lon")
+	log.Trace().Msgf("sLat = %v, sLon = %v, r.URL.Query() = %v, Get()_par1 = %v, Get()_par2 = %v", sLat, sLon, r.URL.Query(), "lat", "lon")
+
 	if sLat == "" || sLon == "" {
 		http.Error(w, "Please specify location params", http.StatusBadRequest)
 		return
 	}
 
 	Lat, _ := strconv.ParseFloat(sLat, 32)
+	log.Trace().Msgf("Lat = %v, sLat = %v, ParseFloat()_par1 = %v", Lat, sLat, 32)
+
 	lat := float32(Lat)
+	log.Trace().Msgf("lat = %v, Lat = %v", lat, Lat)
+
 	Lon, _ := strconv.ParseFloat(sLon, 32)
+	log.Trace().Msgf("Lon = %v, sLon = %v, ParseFloat()_par1 = %v", Lon, sLon, 32)
+
 	lon := float32(Lon)
+	log.Trace().Msgf("lon = %v, Lon = %v", lon, Lon)
 
 // 	log.Trace().Msg("starts searchHandler querying downstream")
 
@@ -199,6 +211,8 @@ func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 		     inDate,
 		     outDate,
 	})
+	log.Trace().Msgf("searchResp = %v, err = %v, ctx_search = %v, lat = %v, lon = %v, inDate = %v, outDate = %v", searchResp, err, ctx_search, lat, lon, inDate, outDate)
+
 	if err != nil {
 		if e, ok := status.FromError(err); ok{
 			if e.Code() == codes.DeadlineExceeded{

@@ -6,7 +6,7 @@ import (
 	// F"io/ioutil"
 	"net"
 
-// 	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log"
 
 	// "os"
 	"time"
@@ -144,6 +144,8 @@ func (s *Server) Nearby(ctx context.Context, req *pb.NearbyRequest) (*pb.SearchR
 		Lat: req.Lat,
 		Lon: req.Lon,
 	})
+	log.Trace().Msgf("nearby = %v, err = %v, ctx = %v, req.Lat = %v, req.Lon = %v", nearby, err, ctx, req.Lat, req.Lon)
+
 	if err != nil {
 		return nil, err
 	}
